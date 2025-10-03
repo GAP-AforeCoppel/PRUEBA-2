@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vista 360° del Cliente</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --coppel-blue: #004a99;
+            --coppel-yellow: #ffc107;
+            --light-gray: #f4f4f4;
+            --text-color: #333;
+            --card-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-gray);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Section */
+        .client-header {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            margin-bottom: 25px;
+        }
+        .client-header .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 20px;
+            flex-shrink: 0;
+            object-fit: cover; /* Ensures the image covers the circular area without distortion */
+        }
+        .client-header .info h1 {
+            margin: 0 0 5px 0;
+            font-size: 2em;
+            color: var(--coppel-blue);
+        }
+        .client-header .info p {
+            margin: 0;
+            color: #666;
+        }
+
+        /* Main Grid Layout */
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        /* Card Styling */
+        .card {
+            background-color: #fff;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--coppel-yellow);
+        }
+        .card-header i {
+            font-size: 1.5em;
+            color: var(--coppel-blue);
+            margin-right: 15px;
+            width: 30px;
+            text-align: center;
+        }
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.4em;
+            color: var(--coppel-blue);
+        }
+
+        /* Specific Module Styles */
+        .alert-card {
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 6px solid;
+            margin-top: 15px;
+        }
+        .alert-no-apto {
+            background-color: #fbe9e7;
+            border-color: #ff5722;
+        }
+        .alert-no-apto h4 {
+            color: #c62828;
+            margin-top:0;
+        }
+        .alert-recomendacion {
+            background-color: #e3f2fd;
+            border-color: #2196f3;
+        }
+        .alert-recomendacion h4 {
+            color: #1565c0;
+            margin-top:0;
+        }
+
+        /* Financial Summary */
+        .financial-summary .total-balance {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: var(--coppel-blue);
+            text-align: center;
+            margin: 10px 0 20px 0;
+        }
+        .aportaciones-chart {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 120px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .chart-bar {
+            width: 15%;
+            background-color: var(--coppel-blue);
+            border-radius: 5px 5px 0 0;
+            position: relative;
+            text-align: center;
+            color: white;
+            font-size: 0.8em;
+            padding-top: 5px;
+        }
+        .subcuentas-list {
+            list-style: none;
+            padding: 0;
+        }
+        .subcuentas-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .subcuentas-list span {
+            font-weight: bold;
+        }
+
+        .btn {
+            background-color: var(--coppel-yellow);
+            color: var(--text-color);
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            margin-top: auto;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #e6ac00;
+        }
+        
+        /* Grupo Coppel Relations */
+        .relation-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        .relation-item i {
+            color: var(--coppel-blue);
+            font-size: 1.5em;
+            margin-right: 15px;
+            width: 25px;
+        }
+        .relation-item .status {
+            margin-left: auto;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 5px;
+        }
+        .status-positive { color: #2e7d32; background-color: #e8f5e9; }
+        .status-negative { color: #c62828; background-color: #fbe9e7; }
+
+        /* Stepper for Tramites */
+        .stepper {
+            display: flex;
+            justify-content: space-between;
+            list-style: none;
+            padding: 0;
+            position: relative;
+        }
+        .stepper::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background-color: #e0e0e0;
+            z-index: 1;
+        }
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            z-index: 2;
+        }
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            border: 4px solid #fff;
+            margin-bottom: 8px;
+        }
+        .step.active .step-circle {
+            background-color: var(--coppel-blue);
+        }
+        .step.active span {
+            font-weight: bold;
+            color: var(--coppel-blue);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <!-- Client Header -->
+        <header class="client-header">
+            <img src="fotoirain.png" alt="Foto del trabajador" class="avatar">
+            <div class="info">
+                <h1>IRAIN ALONSO VERDUGO AVILA</h1>
+                <p>Trabajador #18302945 | NSS: 02160028250 | CURP: VEAI000218HSLRVRA5 | RFC: VEAI000218FM0 | Activo desde: 15/04/2005</p>
+            </div>
+        </header>
+
+        <main class="main-grid">
+            
+            <!-- Columna 1 -->
+            <div class="column">
+                <!-- Aptitud para Pensión -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa-solid fa-user-check"></i>
+                        <h3>Aptitud para Pensión</h3>
+                    </div>
+                    <p>Análisis en tiempo real sobre la elegibilidad del cliente para iniciar su trámite.</p>
+                    <div class="alert-card alert-no-apto">
+                        <h4>Estatus: Sin derecho</h4>
+                        <b>Motivo:</b> No cumple con la edad mínima de retiro (25 años).
+                    </div>
+                </div>
+
+                <!-- Resumen Financiero -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa-solid fa-sack-dollar"></i>
+                        <h3>Resumen Financiero Afore</h3>
+                    </div>
+                    <p style="text-align: center; margin-top: 0;">Saldo Actual Total</p>
+                    <div class="total-balance">$254,830.50</div>
+                    
+                    <p><b>Historial de Aportaciones (Últimos 6 meses)</b></p>
+                    <div class="aportaciones-chart">
+                        <div class="chart-bar" style="height: 60%;"><span>$2.1k</span></div>
+                        <div class="chart-bar" style="height: 75%;"><span>$2.5k</span></div>
+                        <div class="chart-bar" style="height: 50%;"><span>$1.8k</span></div>
+                        <div class="chart-bar" style="height: 85%;"><span>$2.8k</span></div>
+                        <div class="chart-bar" style="height: 70%;"><span>$2.3k</span></div>
+                        <div class="chart-bar" style="height: 95%;"><span>$3.1k</span></div>
+                    </div>
+
+                    <p style="margin-top: 20px;"><b>Detalle de Subcuentas:</b></p>
+                    <ul class="subcuentas-list">
+                        <li>Retiro, Cesantía y Vejez <span>$210,150.20</span></li>
+                        <li>Vivienda 97 <span>$35,680.30</span></li>
+                        <li>Aportaciones Voluntarias <span>$9,000.00</span></li>
+                    </ul>
+
+                    <a href="https://www.aforeweb.com.mx/" target="_blank" rel="noopener noreferrer" class="btn"><i class="fa-solid fa-plus"></i> Realizar Aportación Voluntaria</a>
+                </div>
+            </div>
+
+            <!-- Columna 2 -->
+            <div class="column">
+                <!-- Recomendaciones Proactivas -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <h3>Recomendaciones Proactivas</h3>
+                    </div>
+                    <p>Sugerencias inteligentes basadas en el perfil y momento de vida del cliente.</p>
+                     <div class="alert-card alert-recomendacion">
+                        <h4>💡 Sugerencias para Manuel:</h4>
+                        <ul>
+                            <li><b>Producto Sugerido:</b> Ahorro Voluntario.<br><b>Argumento:</b> "Incrementa tu pensión futura. Pequeñas aportaciones hoy harán una gran diferencia mañana."</li>
+                            <li><b>Acción Sugerida:</b> Actualizar Expediente de Identificación.<br><b>Argumento:</b> "Asegura que tus trámites futuros sean más rápidos completando tu expediente biométrico."</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Relación con Grupo Coppel -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa-solid fa-store"></i>
+                        <h3>Relación con Grupo Coppel</h3>
+                    </div>
+                    <div class="relation-item">
+                        <i class="fa-solid fa-credit-card"></i>
+                        <span>Crédito Coppel</span>
+                        <span class="status status-positive">Al corriente</span>
+                    </div>
+                    <div class="relation-item">
+                        <i class="fa-solid fa-landmark"></i>
+                        <span>Productos BanCoppel</span>
+                         <span class="status status-positive">Activo</span>
+                    </div>
+                    <div class="relation-item">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>Seguros</span>
+                        <span class="status status-negative">No tiene</span>
+                    </div>
+                </div>
+
+                <!-- Gestión de Trámites -->
+                <div class="card">
+                     <div class="card-header">
+                        <i class="fa-solid fa-folder-open"></i>
+                        <h3>Trámites Activos</h3>
+                    </div>
+                    <p><b>Trámite:</b> Actualización de Domicilio</p>
+                    <ul class="stepper">
+                        <li class="step active">
+                            <div class="step-circle"></div>
+                            <span>Solicitado</span>
+                        </li>
+                        <li class="step active">
+                            <div class="step-circle"></div>
+                            <span>En Revisión</span>
+                        </li>
+                        <li class="step">
+                            <div class="step-circle"></div>
+                            <span>Aprobado</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>
+
+
